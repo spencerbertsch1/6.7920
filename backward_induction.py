@@ -93,7 +93,7 @@ def plot_results(v_vec: np.array, pi_vec: np.array):
     plt.title("Line graph")
     plt.xlabel("X axis")
     plt.ylabel("Y axis")
-    plt.plot(x, v_data, color ="red", label="V0*")
+    # plt.plot(x, v_data, color ="red", label="V0*")
     plt.plot(x, pi_data, color ="blue", label="pi_0")
     plt.legend(loc="upper left")
     plt.show()
@@ -108,7 +108,6 @@ def main():
     pi = solution_dict['pi']
 
     plot_results(v_vec=v, pi_vec=pi)
-    # plot_results(vec_to_plot=pi)
 
 
 if __name__ == "__main__":
