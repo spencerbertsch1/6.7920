@@ -8,6 +8,7 @@
 
 # imports 
 import numpy as np
+import matplotlib.pyplot as plt
 np.random.seed = 2
 
 """
@@ -22,11 +23,13 @@ h_t = 4
 # define the cost for a back ordered unit of goods for single time period 
 b_t = 2
 # define the number of periods in the problem 
-T=3
+T=1
 # define the action space
 A = list(range(0, 21, 1))
 # define the cardinality of the state space
-S = len(A)
+state_space_size = 20
+S_arr = list(range(-state_space_size, state_space_size+1, 1))
+S = len(S_arr)
 # define the elements of the discrete uniform distribution that represents demand
 D_vals = list(range(0, 11, 1))
 
@@ -51,10 +54,11 @@ def backwards_ind(s_t: int, t: int):
 
         # here we iterate through the reversed list (T-1 --> t)
         for t in reversed(list(range(t, T, 1))):
-            print(f'Current period: {t}')
+            print(f'--- Current period: {t} ---')
+            # s_t = 0  # <-- remove later!!
             
             # for s_t in list(range(s-20, s+21, 1)): 
-            for s_t in list(range(s_t-10, s_t+21, 1)): 
+            for s_t in list(range(s_t-state_space_size, s_t+state_space_size+1, 1)): 
                 print(f'Current state: {s_t}')
                 
                 all_action_cost_vec = []
@@ -72,10 +76,28 @@ def backwards_ind(s_t: int, t: int):
                     action_cost = sum(single_action_cost_vec)/len(single_action_cost_vec)
                     all_action_cost_vec.append(action_cost)
 
-                pi[s_t, t] = np.argmin(all_action_cost_vec) # optimal policy for this state and period 
-                v[s_t, t] = np.min(all_action_cost_vec) # optimal value function for state s and period t
+                pi[s_t+state_space_size, t] = np.argmin(all_action_cost_vec) # optimal policy for this state and period 
+                v[s_t+state_space_size, t] = np.min(all_action_cost_vec) # optimal value function for state s and period t
 
         return {'v': v, 'pi': pi}
+
+
+def plot_results(v_vec: np.array, pi_vec: np.array):
+
+    v_data: list = [i[0] for i in list(v_vec)]
+    pi_data: list = [i[0] for i in list(pi_vec)]
+    # data to be plotted
+    x = np.arange(0, len(v_data))
+    
+    # plotting
+    plt.title("Line graph")
+    plt.xlabel("X axis")
+    plt.ylabel("Y axis")
+    plt.plot(x, v_data, color ="red", label="V0*")
+    plt.plot(x, pi_data, color ="blue", label="pi_0")
+    plt.legend(loc="upper left")
+    plt.show()
+
 
 def main():
     """
@@ -84,6 +106,9 @@ def main():
     solution_dict: dict = backwards_ind(s_t=0, t=0)
     v = solution_dict['v']
     pi = solution_dict['pi']
+
+    plot_results(v_vec=v, pi_vec=pi)
+    # plot_results(vec_to_plot=pi)
 
 
 if __name__ == "__main__":
