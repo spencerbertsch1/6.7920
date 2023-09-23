@@ -32,6 +32,7 @@ S_arr = list(range(-state_space_size, state_space_size+1, 1))
 S = len(S_arr)
 # define the elements of the discrete uniform distribution that represents demand
 D_vals = list(range(0, 11, 1))
+# D_vals = [5]
 
 
 def backwards_ind(s_t: int, t: int, o_t: int, h_t: int, b_t: int):
@@ -56,9 +57,7 @@ def backwards_ind(s_t: int, t: int, o_t: int, h_t: int, b_t: int):
         # here we iterate through the reversed list (T-1 --> t)
         for t in reversed(list(range(t, T, 1))):
             print(f'--- Current period: {t} ---')
-            # s_t = 0  # <-- remove later!!
-            
-            # for s_t in list(range(s-20, s+21, 1)): 
+
             for s_t in S_space: 
                 print(f'Current state: {s_t}')
                 
@@ -69,7 +68,6 @@ def backwards_ind(s_t: int, t: int, o_t: int, h_t: int, b_t: int):
                     single_action_cost_vec = []
                     
                     for D_t in D_vals: 
-                    # D_t = 5
 
                         c_t = o_t*a_t + np.max(((h_t * (s_t + a_t - D_t)), (-b_t * (s_t + a_t - D_t))))
 
@@ -92,7 +90,7 @@ def plot_results(v_vec: np.array, pi_vec: np.array, S: list):
     # x = np.arange(0, len(v_data))
     
     # plotting
-    plt.title("Optimal Policy and Value Function")
+    plt.title("Optimal Policy and Value Function, Base Stock = 5 Units")
     plt.xlabel("State (units)")
     plt.ylabel("Policy (action given state) & Value(state)")
     plt.plot(S, v_data, color ="red", label="V0*", linestyle="", marker="o")
@@ -162,7 +160,7 @@ def main():
     """
     Driver code 
     """
-    o_t = 1
+    o_t =1
     h_t = 4
     b_t = 2
     solution_dict: dict = backwards_ind(s_t=0, t=0, o_t=o_t, h_t=h_t, b_t=b_t)
